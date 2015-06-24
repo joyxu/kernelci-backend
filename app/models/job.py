@@ -15,7 +15,6 @@
 
 """The model that represents a job document in the mongodb collection."""
 
-import datetime
 import types
 
 import models
@@ -212,7 +211,6 @@ class JobDocument(modb.BaseDocument):
         :return An instance of `JobDocument` or None
         """
         job_doc = None
-        now = datetime.datetime.now(tz=tz_util.utc)
         # pylint: disable=maybe-no-member
         if json_obj and isinstance(json_obj, types.DictionaryType):
             json_get = json_obj.get
@@ -221,7 +219,7 @@ class JobDocument(modb.BaseDocument):
 
             job_doc = JobDocument(job, kernel)
 
-            job_doc.created_on = json_get(models.CREATED_KEY, now)
+            job_doc.created_on = json_get(models.CREATED_KEY, None)
             job_doc.git_branch = json_get(models.GIT_BRANCH_KEY, None)
             job_doc.git_commit = json_get(models.GIT_COMMIT_KEY, None)
             job_doc.git_describe = json_get(models.GIT_DESCRIBE_KEY, None)
