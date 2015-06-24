@@ -105,6 +105,8 @@ def _import_job(job, kernel, database, base_path=utils.BASE_PATH):
         job_id = job_doc.id
     else:
         job_doc = mjob.JobDocument(job, kernel)
+
+
 		job_doc.created_on = datetime.datetime.now(tz=bson.tz_util.utc)
         ret_val, job_id = utils.db.save(database, job_doc, manipulate=True)
 
