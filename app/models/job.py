@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """The model that represents a job document in the mongodb collection."""
+import bson
 import datetime
 import types
 
