@@ -10,7 +10,7 @@
     - app
 
 - name: Checkout kernel-ci-backend code
-git:  repo=https://github.com/joyxu/kernelci-backend.git
+  git:  repo=https://github.com/joyxu/kernelci-backend.git
         dest={{ install_base }}/{{ hostname }}
         version={{ git_head }}
         update=yes
