@@ -179,10 +179,7 @@ def defconfig_bisect_compared_to(doc_id, compare_to, db_options, fields=None):
 def send_boot_report(job,
                      kernel,
                      lab_name,
-                     email_format,
-                     to_addrs,
-                     db_options,
-                     mail_options, cc=None, bcc=None, in_reply_to=None):
+                     email_format, to_addrs, db_options, mail_options):
     """Create the boot report email and send it.
 
     :param job: The job name.
@@ -199,12 +196,6 @@ def send_boot_report(job,
     :type db_options: dictionary
     :param mail_options: The options necessary to connect to the SMTP server.
     :type mail_options: dictionary
-    :param cc: The list of addresses to add in CC.
-    :type cc: list
-    :param bcc: The list of addresses to add in BCC.
-    :type bcc: list
-    :param in_reply_to: The ID of the message this email is a reply to.
-    :type in_reply_to: string
     """
     utils.LOG.info("Preparing boot report email for '%s-%s'", job, kernel)
     status = "ERROR"
@@ -221,12 +212,7 @@ def send_boot_report(job,
         utils.LOG.info("Sending boot report email for '%s-%s'", job, kernel)
         status, errors = utils.emails.send_email(
             to_addrs,
-            subject,
-            txt_body,
-            html_body,
-            mail_options,
-            headers=headers, cc=cc, bcc=bcc, in_reply_to=in_reply_to
-        )
+            subject, txt_body, html_body, mail_options, headers=headers)
         utils.report.common.save_report(
             job, kernel, models.BOOT_REPORT, status, errors, db_options)
     else:
@@ -244,10 +230,7 @@ def send_boot_report(job,
     ignore_result=False)
 def send_build_report(job,
                       kernel,
-                      email_format,
-                      to_addrs,
-                      db_options,
-                      mail_options, cc=None, bcc=None, in_reply_to=None):
+                      email_format, to_addrs, db_options, mail_options):
     """Create the build report email and send it.
 
     :param job: The job name.
@@ -262,12 +245,6 @@ def send_build_report(job,
     :type db_options: dictionary
     :param mail_options: The options necessary to connect to the SMTP server.
     :type mail_options: dictionary
-    :param cc: The list of addresses to add in CC.
-    :type cc: list
-    :param bcc: The list of addresses to add in BCC.
-    :type bcc: list
-    :param in_reply_to: The ID of the message this email is a reply to.
-    :type in_reply_to: string
     """
     utils.LOG.info("Preparing build report email for '%s-%s'", job, kernel)
     status = "ERROR"
@@ -285,12 +262,7 @@ def send_build_report(job,
         utils.LOG.info("Sending build report email for '%s-%s'", job, kernel)
         status, errors = utils.emails.send_email(
             to_addrs,
-            subject,
-            txt_body,
-            html_body,
-            mail_options,
-            headers=headers, cc=cc, bcc=bcc, in_reply_to=in_reply_to
-        )
+            subject, txt_body, html_body, mail_options, headers=headers)
         utils.report.common.save_report(
             job, kernel, models.BOOT_REPORT, status, errors, db_options)
     else:

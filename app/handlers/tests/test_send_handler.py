@@ -187,8 +187,7 @@ class TestSendHandler(testing.AsyncHTTPTestCase, testing.LogTrapTestCase):
                 ["txt"],
                 ["test@example.org"], self.dboptions, self.mailoptions
             ],
-            countdown=60*60,
-            kwargs={"cc": [], "bcc": [], "in_reply_to": None}
+            countdown=60*60
         )
 
     def test_post_wrong_delay(self):
@@ -234,8 +233,7 @@ class TestSendHandler(testing.AsyncHTTPTestCase, testing.LogTrapTestCase):
                 ["txt"],
                 ["test@example.org"], self.dboptions, self.mailoptions
             ],
-            countdown=100,
-            kwargs={"cc": [], "bcc": [], "in_reply_to": None}
+            countdown=100
         )
 
     @mock.patch("taskqueue.tasks.send_boot_report")
@@ -264,8 +262,7 @@ class TestSendHandler(testing.AsyncHTTPTestCase, testing.LogTrapTestCase):
                 ["txt"],
                 ["test@example.org"], self.dboptions, self.mailoptions
             ],
-            countdown=18000,
-            kwargs={"cc": [], "bcc": [], "in_reply_to": None}
+            countdown=10800
         )
 
     @mock.patch("taskqueue.tasks.send_build_report")
@@ -293,8 +290,7 @@ class TestSendHandler(testing.AsyncHTTPTestCase, testing.LogTrapTestCase):
                 ["txt"],
                 ["test@example.org"], self.dboptions, self.mailoptions
             ],
-            countdown=60*60,
-            kwargs={"cc": [], "bcc": [], "in_reply_to": None}
+            countdown=60*60
         )
 
     def test_post_build_report_no_email(self):
@@ -345,8 +341,7 @@ class TestSendHandler(testing.AsyncHTTPTestCase, testing.LogTrapTestCase):
                 ["txt"],
                 ["test2@example.org"], self.dboptions, self.mailoptions
             ],
-            countdown=60*60,
-            kwargs={"cc": [], "bcc": [], "in_reply_to": None}
+            countdown=60*60
         )
         mock_build.apply_async.assert_called_with(
             [
@@ -355,92 +350,49 @@ class TestSendHandler(testing.AsyncHTTPTestCase, testing.LogTrapTestCase):
                 ["txt"],
                 ["test@example.org"], self.dboptions, self.mailoptions
             ],
-            countdown=60*60,
-            kwargs={"cc": [], "bcc": [], "in_reply_to": None}
+            countdown=60*60
         )
 
     def test_get_email_addresses_no_addresses(self):
-        self.assertTupleEqual(
-            ([], [], []), sendh._get_email_addresses(None, None))
-        self.assertTupleEqual(([], [], []), sendh._get_email_addresses('', ''))
-        self.assertTupleEqual(([], [], []), sendh._get_email_addresses([], []))
+        self.assertListEqual([], sendh._get_email_addresses(None, None))
+        self.assertListEqual([], sendh._get_email_addresses('', ''))
+        self.assertListEqual([], sendh._get_email_addresses([], []))
 
     def test_get_email_addresses_only_report(self):
-        self.assertTupleEqual(
-            (["test@example.org"], [], []),
+        self.assertListEqual(
+            ["test@example.org"],
             sendh._get_email_addresses("test@example.org", None))
 
-        self.assertTupleEqual(
-            (["test@example.org"], [], []),
+        self.assertListEqual(
+            ["test@example.org"],
             sendh._get_email_addresses(["test@example.org"], None))
 
-        self.assertTupleEqual(
-            (["test@example.org"], [], []),
+        self.assertListEqual(
+            ["test@example.org"],
             sendh._get_email_addresses("test@example.org", ""))
 
-        self.assertTupleEqual(
-            (["test@example.org"], [], []),
+        self.assertListEqual(
+            ["test@example.org"],
             sendh._get_email_addresses(["test@example.org"], ""))
 
-        self.assertTupleEqual(
-            (["test@example.org"], [], []),
+        self.assertListEqual(
+            ["test@example.org"],
             sendh._get_email_addresses("test@example.org", []))
 
-        self.assertTupleEqual(
-            (["test@example.org"], [], []),
+        self.assertListEqual(
+            ["test@example.org"],
             sendh._get_email_addresses(["test@example.org"], []))
 
     def test_get_email_addresses_both(self):
-        self.assertTupleEqual(
-            (["test@example.org", "test2@example.org"], [], []),
+        self.assertListEqual(
+            ["test@example.org", "test2@example.org"],
             sendh._get_email_addresses(
                 "test@example.org", "test2@example.org"))
 
-        self.assertTupleEqual(
-            (["test@example.org", "test2@example.org"], [], []),
+        self.assertListEqual(
+            ["test@example.org", "test2@example.org"],
             sendh._get_email_addresses(
                 ["test@example.org"], ["test2@example.org"]))
-
-    def test_get_email_addrs_with_cc_bcc(self):
-        self.assertTupleEqual(
-            ([], ["test@example.org"], []),
-            sendh._get_email_addresses(None, None, cc="test@example.org"))
-
-        self.assertTupleEqual(
-            ([], ["test@example.org"], []),
-            sendh._get_email_addresses(None, None, cc=["test@example.org"]))
-
-        self.assertTupleEqual(
-            ([], ["test@example.org"], ["test@example.org"]),
-            sendh._get_email_addresses(
-                None, None, cc=["test@example.org"], bcc=["test@example.org"])
-        )
-
-        self.assertTupleEqual(
-            (
-                [],
-                ["test@example.org", "test1@example.org"],
-                ["test@example.org", "test1@example.org"]
-            ),
-            sendh._get_email_addresses(
-                None, None,
-                cc=["test@example.org"], bcc=["test@example.org"],
-                g_cc="test1@example.org", g_bcc=["test1@example.org"]
-            )
-        )
-
-        self.assertTupleEqual(
-            (
-                [],
-                ["test@example.org", "test1@example.org"],
-                ["test@example.org", "test1@example.org"]
-            ),
-            sendh._get_email_addresses(
-                None, None,
-                cc=["test@example.org"], bcc=["test@example.org"],
-                g_cc=["test1@example.org"], g_bcc=["test1@example.org"]
-            )
-        )
 
     def test_check_status(self):
         when = datetime.datetime.now()

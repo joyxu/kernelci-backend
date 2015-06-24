@@ -14,8 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """The model that represents a job document in the mongodb collection."""
-import bson
-import datetime
+
 import types
 
 import models
@@ -78,8 +77,6 @@ class JobDocument(modb.BaseDocument):
     @property
     def created_on(self):
         """When this object was created."""
-        if not self._created_on:
-            self._created_on = datetime.datetime.now(tz=bson.tz_util.utc)
         return self._created_on
 
     @created_on.setter
@@ -214,6 +211,7 @@ class JobDocument(modb.BaseDocument):
         :return An instance of `JobDocument` or None
         """
         job_doc = None
+
         # pylint: disable=maybe-no-member
         if json_obj and isinstance(json_obj, types.DictionaryType):
             json_get = json_obj.get
