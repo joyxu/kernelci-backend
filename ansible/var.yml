@@ -1,2 +1,3 @@
 ---
  master_key: 123456
+ storage_url = 'http://192.168.1.108:80/'    
